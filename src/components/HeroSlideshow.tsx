@@ -3,22 +3,33 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const slides = [
+type Slide = {
+  type: 'image' | 'video';
+  src: string;
+  /** Short description for accessibility */
+  alt: string;
+};
+
+const slides: Slide[] = [
   {
-    src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
-    alt: 'Cities folding like waves',
+    type: 'image',
+    src: '/images/4.jpg',
+    alt: 'Soft Collapse Collection',
   },
   {
-    src: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21',
-    alt: "Pixels dissolve a swimmer's face",
+    type: 'video',
+    src: '/video/Residuals_Flood_web.mp4',
+    alt: 'Residuals',
   },
   {
-    src: 'https://images.unsplash.com/photo-1492691527719-6b17f5d94c3e',
-    alt: 'Swirling backyard pool party',
+    type: 'image',
+    src: '/images/Scene1.jpg',
+    alt: 'Selected Works',
   },
   {
-    src: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
-    alt: 'Runners fleeing a glitching house',
+    type: 'video',
+    src: '/video/exhibit.mp4',
+    alt: 'Exhibitions',
   },
 ];
 
@@ -47,15 +58,28 @@ export default function HeroSlideshow() {
           exit="exit"
           transition={{ duration: 0.8 }}
           className="absolute inset-0 w-full h-full"
+          aria-label={slides[index].alt}
+          role="img"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image
-            src={slides[index].src}
-            alt={slides[index].alt}
-            fill
-            className="object-cover object-center"
-            priority={index === 0}
-          />
+          {slides[index].type === 'image' ? (
+            <Image
+              src={slides[index].src}
+              alt={slides[index].alt}
+              fill
+              className="object-cover object-center"
+              priority={index === 0}
+            />
+          ) : (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover object-center"
+            >
+              <source src={slides[index].src} type="video/mp4" />
+            </video>
+          )}
         </motion.div>
       </AnimatePresence>
       <div className="absolute inset-0 bg-black/40 flex items-end pb-12 px-6 sm:px-12 md:px-20">
